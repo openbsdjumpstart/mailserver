@@ -1,0 +1,2 @@
+# mailserver
+OpenBSD mailserver
