@@ -1,0 +1,24 @@
+opensmtpd_lib()
+{
+    # Check for debug mode
+    [[ -n ${DEBUG} ]] && set -x
+
+    # Set variables in read-only
+    local _mail=/etc/mail _backup=/etc/examples
+
+    # Add OpenSMTPD-extras
+    if (! /usr/sbin/pkg_info | grep -q opensmtpd-extras); then
+            /usr/sbin/pkg_add opensmtpd-extras
+    fi
+
+    # Link Python
+    ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
+    ln -sf /usr/local/bin/python2.7-2to3 /usr/local/bin/2to3
+    ln -sf /usr/local/bin/python2.7-config /usr/local/bin/python-config
+    ln -sf /usr/local/bin/pydoc2.7  /usr/local/bin/pydoc
+
+    # Move existing /etc/mail/smtpd.conf to /etc/examples
+    if [ ! -r $_backup/smtpd.conf ]; then
+            mv $_mail/smtpd.conf $_backup
+    fi
+}
