@@ -1,0 +1,34 @@
+#!/bin/ksh
+
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+# Debug mode when -d is present
+[[ "$1" == "-d" ]] && set -x && readonly DEBUG=1
+
+# Set OpenBSD version supported without the dot
+readonly VER=63
+
+# Handle errors
+err()
+{
+  echo "${1}" >&2 && return "${2:-1}"
+}
+
+# Install all libraries (opensmtpd, dovecot ...)
+install_all()
+{
+  for i in ./lib/* ; do
+    . $i
+    ${i#*/*/}_lib
+  done
+}
+
+# You need 'root' user for this script!
+(($(id -u) != 0)) && err "${0##*/}: need root privileges"
+
+# Are you using the good release ?
+(($(uname -r | tr -d .) != $VER)) && err "${0##*/}: release is not supported"
+
+[[ "$1" == "-d" ]] && [[ $# == 1 ]] && install_all
+[[ "$#" == 0 ]] && install_all
