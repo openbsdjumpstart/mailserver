@@ -22,3 +22,11 @@ OpenBSD mailserver
 - Installer (a mix of shell scripts)
 - Full comments on any scripts and configuration files
 - Documentation (backup & restore your server)
+
+## Installation
+
+Just run:
+
+    cd /var
+    git clone https://github.com/openbsdjumpstart/mailserver
+    cd mailserver && ./bin/deploy
