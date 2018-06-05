@@ -1,34 +1,59 @@
 #!/bin/ksh
 
-# Exit immediately if a command exits with a non-zero status.
+# exit immediately if a command exits with a non-zero status
 set -e
 
-# Debug mode when -d is present
-[[ "$1" == "-d" ]] && set -x && readonly DEBUG=1
-
-# Set OpenBSD version supported without the dot
+# set OpenBSD version supported without the dot
 readonly VER=63
 
-# Handle errors
+# handle errors
 err()
 {
   echo "${1}" >&2 && return "${2:-1}"
 }
 
-# Install all libraries (opensmtpd, dovecot ...)
+# install all libraries (opensmtpd, dovecot ...)
 install_all()
 {
   for i in ./lib/* ; do
-    . $i
-    ${i#*/*/}_lib
+    . "$i"
+    "${i#*/*/}"_lib
   done
 }
 
-# You need 'root' user for this script!
+usage()
+{
+  err "Usage: ${0##*/} [-d] [library]"
+}
+
+# you need 'root' user for this script!
 (($(id -u) != 0)) && err "${0##*/}: need root privileges"
 
-# Are you using the good release ?
-(($(uname -r | tr -d .) != $VER)) && err "${0##*/}: release is not supported"
+# are you using the good release ?
+(($(uname -r | tr -d .) != VER)) && err "${0##*/}: this release is not supported"
 
-[[ "$1" == "-d" ]] && [[ $# == 1 ]] && install_all
-[[ "$#" == 0 ]] && install_all
+# the syntax
+while getopts :d opt; do
+  case ${opt} in
+# Debug mode when -d is present
+  d) set -x && readonly DEBUG=1;;
+  *) usage;;
+  esac
+done
+
+# we remove an option
+shift $((OPTIND - 1))
+
+# only one library allowed, or empty library
+(($# > 1)) && usage
+
+# if no library mentioned we install all, otherwise, we just install the library present in $1
+if [[ -z $1 ]]; then
+  install_all
+else
+  # does this library exist ?
+  [[ ! -f ./lib/$1 ]] && err "${0##*/}: this library doesn't exist"
+  # install the unique library
+  . ./lib/$1
+  $1_lib
+fi
