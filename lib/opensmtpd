@@ -1,24 +1,42 @@
 opensmtpd_lib()
 {
-    # Check for debug mode
-    [[ -n ${DEBUG} ]] && set -x
+  # check for debug mode
+  [[ -n ${DEBUG} ]] && set -x
 
-    # Set variables in read-only
-    local _mail=/etc/mail _backup=/etc/examples
+  # set variables in read-only
+  local _conf=/etc/mail/smtpd.conf _backup=/etc/examples _login=/etc/login.conf
 
-    # Add OpenSMTPD-extras
-    if (! /usr/sbin/pkg_info | grep -q opensmtpd-extras); then
-            /usr/sbin/pkg_add opensmtpd-extras
-    fi
+  # add OpenSMTPD-extras
+  if (! /usr/sbin/pkg_info | grep -q opensmtpd-extras); then
+    /usr/sbin/pkg_add opensmtpd-extras
+  fi
 
-    # Link Python
-    ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
-    ln -sf /usr/local/bin/python2.7-2to3 /usr/local/bin/2to3
-    ln -sf /usr/local/bin/python2.7-config /usr/local/bin/python-config
-    ln -sf /usr/local/bin/pydoc2.7  /usr/local/bin/pydoc
+  # link Python
+  ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
+  ln -sf /usr/local/bin/python2.7-2to3 /usr/local/bin/2to3
+  ln -sf /usr/local/bin/python2.7-config /usr/local/bin/python-config
+  ln -sf /usr/local/bin/pydoc2.7  /usr/local/bin/pydoc
 
-    # Move existing /etc/mail/smtpd.conf to /etc/examples
+  # stop smtpd
+  /usr/sbin/rcctl stop smtpd >/dev/null 2>&1
+
+  # backup existing /etc/mail/smtpd.conf to /etc/examples
+  if [ -r $_conf ]; then
     if [ ! -r $_backup/smtpd.conf ]; then
-            mv $_mail/smtpd.conf $_backup
+      mv $_conf $_backup
+    else
+      mv $_conf $_backup/smtpd.conf-"$(date "+%Y-%m-%d-%H-%M-%S")"
     fi
+  fi
+
+  # add login class for vmail
+  getcap -f $_login vmail > /dev/null 2>&1 || cat <<EOF >>$_login
+
+vmail:\\
+        :umask=007:\\
+        :tc=daemon:
+EOF
+
+  # create a single system user named vmail if not exists
+  /usr/bin/getent passwd vmail > /dev/null || /usr/sbin/useradd -m -g =uid -L vmail -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
 }
