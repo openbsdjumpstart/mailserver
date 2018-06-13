@@ -3,34 +3,22 @@ opensmtpd_lib()
   # check for debug mode
   [[ -n ${DEBUG} ]] && set -x
 
-  # set variables in read-only
-  local _conf=/etc/mail/smtpd.conf _backup=/etc/examples _login=/etc/login.conf
-
   # add OpenSMTPD-extras
   if (! /usr/sbin/pkg_info | grep -q opensmtpd-extras); then
     /usr/sbin/pkg_add opensmtpd-extras
   fi
 
-  # link Python
-  ln -sf /usr/local/bin/python2.7 /usr/local/bin/python
-  ln -sf /usr/local/bin/python2.7-2to3 /usr/local/bin/2to3
-  ln -sf /usr/local/bin/python2.7-config /usr/local/bin/python-config
-  ln -sf /usr/local/bin/pydoc2.7  /usr/local/bin/pydoc
-
   # stop smtpd
   /usr/sbin/rcctl stop smtpd >/dev/null 2>&1
 
   # backup existing /etc/mail/smtpd.conf to /etc/examples
-  if [ -r $_conf ]; then
-    if [ ! -r $_backup/smtpd.conf ]; then
-      mv $_conf $_backup
-    else
-      mv $_conf $_backup/smtpd.conf-"$(date "+%Y-%m-%d-%H-%M-%S")"
-    fi
-  fi
+  backup /etc/mail/smtpd.conf
+
+  # backup existing /etc/login.conf to /etc/examples
+  backup /etc/login.conf
 
   # add login class for vmail
-  getcap -f $_login vmail > /dev/null 2>&1 || cat <<EOF >>$_login
+  getcap -f /etc/login.conf vmail > /dev/null 2>&1 || cat <<EOF >>/etc/login.conf
 
 vmail:\\
         :umask=007:\\

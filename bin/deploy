@@ -17,13 +17,26 @@ install_all()
 {
   for i in ./lib/* ; do
     . "$i"
-    "${i#*/*/}"_lib
+    "${i##*/}"_lib
   done
 }
 
 usage()
 {
   err "Usage: ${0##*/} [-d] [library]"
+}
+
+# Backup configuration file to /etc/examples
+backup()
+{
+  local _filename="${1##*/}" _examples=/etc/examples
+  if [ -r "$1" ]; then
+    if [ ! -r $_examples/"$_filename" ]; then
+      cp -p "$1" $_examples
+    else
+      cp -p "$1" $_examples/"$_filename"-"$(date "+%Y-%m-%d-%H-%M-%S")"
+    fi
+  fi
 }
 
 # you need 'root' user for this script!
