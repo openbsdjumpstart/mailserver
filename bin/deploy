@@ -17,7 +17,7 @@ install_all()
 {
   for i in ./lib/* ; do
     . "$i"
-    "${i##*/}"_lib
+    "${i##*_}"_lib
   done
 }
 
