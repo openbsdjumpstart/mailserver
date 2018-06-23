@@ -3,7 +3,7 @@
 This document gives a suggestion on how to organize your source code if
 you like to contribute to the project.
 
-Section "Howto" gives some general suggestions for writing shell
+[Section "Howto"](#howto) gives some general suggestions for writing shell
 scripts. And also suggestions for tis project.
 
 Section "Style Guide" gives suggestions on how to format your source
