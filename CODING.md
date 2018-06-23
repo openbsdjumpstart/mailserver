@@ -6,7 +6,7 @@ you like to contribute to the project.
 [Section "Howto"](#howto) gives some general suggestions for writing shell
 scripts. And also suggestions for tis project.
 
-Section "Style Guide" gives suggestions on how to format your source
+[Section "Style Guide"](#syle_guide) gives suggestions on how to format your source
 code. Because we think it´s important for readability to use a style
 consistently within a project.
 
@@ -37,13 +37,13 @@ consistently within a project.
 
 ## Style Guide
 
-- Lines
-- Indentation
-- Tabs, Spaces
-- Braces
+- [Lines](#lines)
+- [Indentation](#indenting)
+- [Tabs, Spaces](#tabs_spaces)
+- [Braces](#braces)
 - Object names
-  - Variables
-  - Functions
+  - [Variables](#variable_names)
+  - [Functions](#function_names)
 
 
 ### Lines
