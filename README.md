@@ -30,3 +30,18 @@ Just run:
     cd /var
     git clone https://github.com/openbsdjumpstart/mailserver
     cd mailserver && ./bin/deploy
+
+## Contributing
+
+First off, thank you for considering contributing to this project.
+
+We love to receive contributions to the project. There are many ways to
+contribute, from improving the documentation, submitting bug reports and
+feature requests or writing code which can be incorporated into the
+project itself.
+
+If you want to contribute to this project please read our suggestions in
+the file CODING.md. Following these guidelines helps that your
+contributed code will fit in the project nicely.
+
+
