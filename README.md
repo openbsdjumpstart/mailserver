@@ -44,4 +44,7 @@ If you want to contribute to this project please read our suggestions in
 the file [CODING.md](CODING.md). Following these guidelines helps that your
 contributed code will fit in the project nicely.
 
+## License
+
+The contents of this repository are covered under the [ISC License](LICENSE).
 
