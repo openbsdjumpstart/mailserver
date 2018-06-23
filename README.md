@@ -41,7 +41,7 @@ feature requests or writing code which can be incorporated into the
 project itself.
 
 If you want to contribute to this project please read our suggestions in
-the file CODING.md. Following these guidelines helps that your
+the file [CODING.md](CODING.md). Following these guidelines helps that your
 contributed code will fit in the project nicely.
 
 
