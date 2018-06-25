@@ -41,7 +41,7 @@ consistently within a project.
 - [Indentation](#indenting)
 - [Tabs, Spaces](#tabs-spaces)
 - [Braces](#braces)
-- [DRY](#DRY)
+- [DRY](#dry)
 - Object names
   - [Variables](#variable-names)
   - [Functions](#function-names)
