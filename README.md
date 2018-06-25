@@ -7,6 +7,7 @@ OpenBSD mailserver
 
 - Multiple domains support with only one admin
 - Work on OpenBSD 6.3
+- Flexible modules
 - Maildir format
 - MTA : OpenSMTPD
 - DKIM support
