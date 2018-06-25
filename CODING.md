@@ -41,6 +41,7 @@ consistently within a project.
 - [Indentation](#indenting)
 - [Tabs, Spaces](#tabs-spaces)
 - [Braces](#braces)
+- [DRY](#DRY)
 - Object names
   - [Variables](#variable-names)
   - [Functions](#function-names)
@@ -97,7 +98,6 @@ Indent your code by **2 spaces**
   expandtab`
 
 
-
 ### Braces
 
 For embracing we are using the Allman Style.
@@ -114,6 +114,11 @@ function()
 }
 finalthing
 ```
+
+
+### DRY
+
+Don't repeat yourself, all common functions (to libraries) need to be in `bin/deploy`.
 
 
 ## Variable names
