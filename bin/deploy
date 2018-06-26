@@ -12,6 +12,18 @@ err()
   echo "${1}" >&2 && return "${2:-1}"
 }
 
+# wrapper for executing commands
+docmd()
+{
+	if [[ -n ${DRYRUN} ]]; then
+    echo "[dryrun]  $@"
+  else
+    "$@" 2>&1
+    (( $? != 0 )) && err "FAILED:  $@\n         Failed with Status: $?" 
+    exit 1
+	fi
+}
+
 # install all libraries (opensmtpd, dovecot ...)
 install_all()
 {
@@ -23,7 +35,13 @@ install_all()
 
 usage()
 {
-  err "Usage: ${0##*/} [-d] [library]"
+  echo "Usage: ${0##*/} [-nd] [library]"
+  echo
+  echo "  -d :   Debugmode. Print commands and parameter assignments"
+  echo "         when they are executed."
+  echo 
+  echo "  -n :   Not executing commands just print out what will happen."
+  echo "         This mode is also known as dryrun."
 }
 
 # Backup configuration file to /etc/examples
@@ -32,28 +50,31 @@ backup()
   local _filename="${1##*/}" _examples=/etc/examples
   if [ -r "$1" ]; then
     if [ ! -r $_examples/"$_filename" ]; then
-      cp -p "$1" $_examples
+      docmd cp -p "$1" $_examples
     else
-      cp -p "$1" $_examples/"$_filename"-"$(date "+%Y-%m-%d-%H-%M-%S")"
+      docmd cp -p "$1" $_examples/"$_filename"-"$(date "+%Y-%m-%d-%H-%M-%S")"
     fi
   fi
 }
-
-# you need 'root' user for this script!
-(($(id -u) != 0)) && err "${0##*/}: need root privileges"
 
 # are you using the good release ?
 (($(uname -r | tr -d .) != VER)) && \
   err "${0##*/}: this release is not supported"
 
 # the syntax
-while getopts :d opt; do
+while getopts :dn opt; do
   case ${opt} in
-# Debug mode when -d is present
-  d) set -x && readonly DEBUG=1;;
-  *) usage;;
+    d) set -x && readonly DEBUG=1;;    # Debug mode when -d is present
+    n) readonly DRYRUN=1;;             # Not executing commands
+    *) usage;;
   esac
 done
+
+# running in dryrun mode?
+[[ -n ${DRYRUN} ]] && echo "Running in dryrun mode" 
+
+# only root can run this scipt if we are not in dryrun mode
+(($(id -u) != 0)) && ((DRYRUN != 1)) && err "You need root privileges" 
 
 # we remove an option
 shift $((OPTIND - 1))
