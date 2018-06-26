@@ -1,10 +1,15 @@
 #!/bin/ksh
 
+readonly TIMESTAMP="$(date "+%Y-%m-%d-%H-%M-%S")"
+
 # exit immediately if a command exits with a non-zero status
 set -e
 
 # set OpenBSD version supported without the dot
 readonly VER=63
+
+# set filename of logfile
+readonly LOG="./logfile-${TIMESTAMP}.txt"
 
 # handle errors
 err()
@@ -18,9 +23,11 @@ docmd()
 	if [[ -n ${DRYRUN} ]]; then
     echo "[dryrun]  $@"
   else
-    "$@" 2>&1
+    echo "$@" >> ${LOG}
+    # append STDOUT to logfile
+    # convert STDERR to STDOUT which is piped to tee
+    ("$@" >> ${LOG}) 2>&1 | tee -a ${LOG}
     (( $? != 0 )) && err "FAILED:  $@\n         Failed with Status: $?" 
-    exit 1
 	fi
 }
 
