@@ -68,5 +68,5 @@ else
   [[ ! -f ./lib/$1 ]] && err "${0##*/}: this library doesn't exist"
   # install the unique library
   . ./lib/$1
-  $1_lib
+  "${1#*_}"_lib
 fi
