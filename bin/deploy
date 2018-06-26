@@ -17,7 +17,7 @@ install_all()
 {
   for i in ./lib/* ; do
     . "$i"
-    "${i##*_}"_lib
+    "${i#*_}"_lib
   done
 }
 
@@ -43,7 +43,8 @@ backup()
 (($(id -u) != 0)) && err "${0##*/}: need root privileges"
 
 # are you using the good release ?
-(($(uname -r | tr -d .) != VER)) && err "${0##*/}: this release is not supported"
+(($(uname -r | tr -d .) != VER)) && \
+  err "${0##*/}: this release is not supported"
 
 # the syntax
 while getopts :d opt; do
@@ -60,7 +61,8 @@ shift $((OPTIND - 1))
 # only one library allowed, or empty library
 (($# > 1)) && usage
 
-# if no library mentioned we install all, otherwise, we just install the library present in $1
+# if no library mentioned we install all, otherwise, we just install 
+# the library present in $1
 if [[ -z $1 ]]; then
   install_all
 else
