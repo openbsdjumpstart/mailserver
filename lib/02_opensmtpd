@@ -28,11 +28,11 @@ EOF
 
   # create a single system user named vmail if not exists
   /usr/bin/getent passwd vmail > /dev/null || \
-    /usr/sbin/useradd -m -g =uid -L vmail -c "Virtual Mail" \
-    -d /var/vmail -s /sbin/nologin vmail
+    docmd /usr/sbin/useradd -m -g =uid -L vmail \
+    -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
 
  # install templates
- /usr/bin/install -m 644 ./conf/opensmtpd/smtpd.conf /etc/mail
+ docmd /usr/bin/install -m 644 ./conf/opensmtpd/smtpd.conf /etc/mail
 
  # start smtpd
  docmd /usr/sbin/rcctl start smtpd
