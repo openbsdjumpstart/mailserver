@@ -21,7 +21,7 @@ err()
 docmd()
 {
   if [[ -n ${DRYRUN} ]]; then
-    echo "[dryrun]  $@"
+    echo "$@"
   else
     echo "$@" >> ${LOG}
     # append STDOUT to logfile
@@ -77,7 +77,7 @@ while getopts :dn opt; do
 done
 
 # running in dryrun mode?
-[[ -n ${DRYRUN} ]] && echo "Running in dryrun mode" 
+[[ -n ${DRYRUN} ]] && echo "Doing a dryrun - Not executing commands" 
 
 # only root can run this scipt if we are not in dryrun mode
 (($(id -u) != 0)) && ((DRYRUN != 1)) && err "You need root privileges" 
