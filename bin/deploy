@@ -20,15 +20,14 @@ err()
 # wrapper for executing commands
 docmd()
 {
-	if [[ -n ${DRYRUN} ]]; then
+  if [[ -n ${DRYRUN} ]]; then
     echo "[dryrun]  $@"
   else
     echo "$@" >> ${LOG}
     # append STDOUT to logfile
     # convert STDERR to STDOUT which is piped to tee
     ("$@" >> ${LOG}) 2>&1 | tee -a ${LOG}
-    (( $? != 0 )) && err "FAILED:  $@\n         Failed with Status: $?" 
-	fi
+  fi
 }
 
 # install all libraries (opensmtpd, dovecot ...)
