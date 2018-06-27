@@ -34,6 +34,11 @@ consistently within a project.
   This function returns 1 or an optional code: `err "some error
   occured" 5`
 
+- **Execute Commands**: Use the `docmd()` function for executing
+  external commands. This finction wraps the checks if the command
+  should be executed and redirects the comands output.
+  Example: instead of `rcctl start foo` do `docmd rcctl start foo`
+
 
 ## Style Guide
 
