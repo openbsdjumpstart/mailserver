@@ -19,12 +19,12 @@ opensmtpd_lib()
 
   # add login class for vmail
   getcap -f /etc/login.conf vmail > /dev/null 2>&1 || \
-    cat <<EOF >>/etc/login.conf
-
-vmail:\\
-        :umask=007:\\
-        :tc=daemon:
-EOF
+    docmd sed -i '$ a\
+\
+vmail\:\\ \
+  :umask=007:\\ \
+  :tc=default: \
+' /etc/login.conf
 
   # create a single system user named vmail if not exists
   /usr/bin/getent passwd vmail > /dev/null || \
