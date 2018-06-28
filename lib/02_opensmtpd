@@ -5,11 +5,11 @@ opensmtpd_lib()
 
   # add OpenSMTPD-extras
   if (! /usr/sbin/pkg_info | grep -q opensmtpd-extras); then
-    /usr/sbin/pkg_add opensmtpd-extras
+    docmd /usr/sbin/pkg_add opensmtpd-extras
   fi
 
   # stop smtpd
-  /usr/sbin/rcctl stop smtpd >/dev/null 2>&1
+  docmd /usr/sbin/rcctl stop smtpd
 
   # backup existing /etc/mail/smtpd.conf to /etc/examples
   backup /etc/mail/smtpd.conf
@@ -19,21 +19,21 @@ opensmtpd_lib()
 
   # add login class for vmail
   getcap -f /etc/login.conf vmail > /dev/null 2>&1 || \
-    cat <<EOF >>/etc/login.conf
-
-vmail:\\
-        :umask=007:\\
-        :tc=daemon:
-EOF
+    docmd sed -i '$ a\
+\
+vmail\:\\ \
+  :umask=007:\\ \
+  :tc=default: \
+' /etc/login.conf
 
   # create a single system user named vmail if not exists
   /usr/bin/getent passwd vmail > /dev/null || \
-    /usr/sbin/useradd -m -g =uid -L vmail -c "Virtual Mail" \
-    -d /var/vmail -s /sbin/nologin vmail
+    docmd /usr/sbin/useradd -m -g =uid -L vmail \
+    -c "Virtual Mail" -d /var/vmail -s /sbin/nologin vmail
 
  # install templates
- /usr/bin/install -m 644 ./conf/opensmtpd/smtpd.conf /etc/mail
+ docmd /usr/bin/install -m 644 ./conf/opensmtpd/smtpd.conf /etc/mail
 
  # start smtpd
- /usr/sbin/rcctl start smtpd >/dev/null 2>&1
+ docmd /usr/sbin/rcctl start smtpd
 }
