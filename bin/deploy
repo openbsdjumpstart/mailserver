@@ -29,13 +29,13 @@ install_all()
 
 usage()
 {
-  echo "Usage: ${0##*/} [-nd] [library]"
+  echo "Usage: ${0##*/} [-dn] [library]"
   echo
   echo "  -d :   Debugmode. Print commands and parameter assignments"
-  echo "         when they are executed."
+  echo "\t when they are executed."
   echo 
   echo "  -n :   Not executing commands just print out what will happen."
-  echo "         This mode is also known as dryrun."
+  err "\t This mode is also known as dry-run."
 }
 
 # Backup configuration file to /etc/examples
