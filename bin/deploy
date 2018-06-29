@@ -15,11 +15,7 @@ err()
 # wrapper for executing commands
 docmd()
 {
-  if [[ -n ${DRYRUN} ]]; then
-    echo "$@"
-  else
-    "$@"
-  fi
+  [[ -n ${DRYRUN} ]] && echo "$@" || "$@"
 }
 
 # install all libraries (opensmtpd, dovecot ...)
