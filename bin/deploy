@@ -15,7 +15,7 @@ err()
 # wrapper for executing commands
 docmd()
 {
-  [[ -n ${DRYRUN} ]] && echo "$@" || "$@"
+  [[ -n ${DRYRUN} ]] && echo "$@" || "$@" >/dev/null 2>&1
 }
 
 # install all libraries (opensmtpd, dovecot ...)
@@ -31,11 +31,11 @@ usage()
 {
   echo "Usage: ${0##*/} [-dn] [library]"
   echo
-  echo "  -d :   Debugmode. Print commands and parameter assignments"
-  echo "\t when they are executed."
+  echo "  -d :\tDebugmode. Print commands and parameter assignments"
+  echo "\twhen they are executed."
   echo 
-  echo "  -n :   Not executing commands just print out what will happen."
-  err "\t This mode is also known as dry-run."
+  echo "  -n :\tNot executing commands just print out what will happen."
+  err "\tThis mode is also known as dry-run."
 }
 
 # Backup configuration file to /etc/examples
@@ -46,7 +46,8 @@ backup()
     if [ ! -r $_examples/"$_filename" ]; then
       docmd cp -p "$1" $_examples
     else
-      docmd cp -p "$1" $_examples/"$_filename"-"$(date "+%Y-%m-%d-%H-%M-%S")"
+      docmd cp -p "$1" $_examples/"$_filename"-"$(date \
+        "+%Y-%m-%d-%H-%M-%S")"
     fi
   fi
 }
