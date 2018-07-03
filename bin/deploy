@@ -13,13 +13,17 @@ mkdir -p $BACKUP
 # handle errors
 err()
 {
-  echo "${1}" >&2 && return "${2:-1}"
+  echo "${0##*/}: ${1}" >&2 && return "${2:-1}"
 }
 
 # wrapper for executing commands
 docmd()
 {
-  [[ -n ${DRYRUN} ]] && echo "$@" || "$@" >/dev/null 2>&1
+  if [[ -n ${DRYRUN} ]]; then
+    echo "$@"
+  else
+    "$@" >/dev/null 2>&1
+  fi
 }
 
 # install all libraries (opensmtpd, dovecot ...)
@@ -46,8 +50,8 @@ usage()
 backup()
 {
   local _filename="${1##*/}"
-  if [ -r "$1" ]; then
-    if [ ! -r $BACKUP/"$_filename" ]; then
+  if [[ -r $1 ]]; then
+    if [[ ! -r $BACKUP/$_filename ]]; then
       docmd cp -p "$1" $BACKUP
     else
       docmd cp -p "$1" $BACKUP/"$_filename"-"$(date \
@@ -58,7 +62,7 @@ backup()
 
 # are you using the good release ?
 (($(uname -r | tr -d .) != VER)) && \
-  err "${0##*/}: this release is not supported"
+  err "this release is not supported"
 
 # the syntax
 while getopts :dn opt; do
@@ -70,14 +74,14 @@ while getopts :dn opt; do
 done
 
 # dry-run not compatible with rollback
-[[ $DRYRUN == 1 ]] && [[ $2 = "rollback" ]] && \
-  err "Dry-run is not compatible with the rollback feature"
+[[ $DRYRUN == 1 ]] && [[ $2 == "rollback" ]] && \
+  err "dry-run is not compatible with the rollback feature"
 
 # running in dry-run mode?
 [[ -n ${DRYRUN} ]] && echo "Doing a dry-run - Not executing commands" 
 
 # only root can run this scipt if we are not in dry-run mode
-(($(id -u) != 0)) && ((DRYRUN != 1)) && err "You need root privileges" 
+(($(id -u) != 0)) && ((DRYRUN != 1)) && err "need root privileges" 
 
 # we remove an option
 shift $((OPTIND - 1))
@@ -95,9 +99,9 @@ if [[ -z $1 ]]; then
   install_all
 else
   # does this library exist ?
-  [[ -f ./lib/$1 ]] || err "${0##*/}: this library doesn't exist"
+  [[ -f ./lib/$1 ]] || err "this library doesn't exist"
   # install the unique library
-  if [ $1 == "rollback" ]; then
+  if [[ $1 == rollback ]]; then
     ./lib/$1
     rm ./lib/$1
   else
