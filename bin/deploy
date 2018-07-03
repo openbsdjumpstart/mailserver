@@ -50,13 +50,8 @@ usage()
 backup()
 {
   local _filename="${1##*/}"
-  if [[ -r $1 ]]; then
-    if [[ ! -r $BACKUP/$_filename ]]; then
-      docmd cp -p "$1" $BACKUP
-    else
-      docmd cp -p "$1" $BACKUP/"$_filename"-"$(date \
-        "+%Y-%m-%d-%H-%M-%S")"
-    fi
+  if [[ -f $1 ]]; then
+    [[ -f $BACKUP/$_filename ]] || docmd cp -p "$1" $BACKUP
   fi
 }
 
