@@ -69,10 +69,14 @@ while getopts :dn opt; do
   esac
 done
 
-# running in dryrun mode?
-[[ -n ${DRYRUN} ]] && echo "Doing a dryrun - Not executing commands" 
+# dry-run not compatible with rollback
+[[ $DRYRUN == 1 ]] && [[ $2 = "rollback" ]] && \
+  err "Dry-run is not compatible with the rollback feature"
 
-# only root can run this scipt if we are not in dryrun mode
+# running in dry-run mode?
+[[ -n ${DRYRUN} ]] && echo "Doing a dry-run - Not executing commands" 
+
+# only root can run this scipt if we are not in dry-run mode
 (($(id -u) != 0)) && ((DRYRUN != 1)) && err "You need root privileges" 
 
 # we remove an option
@@ -81,14 +85,23 @@ shift $((OPTIND - 1))
 # only one library allowed, or empty library
 (($# > 1)) && usage
 
+# create a rollback library
+ROLLBACK=./lib/rollback
+[[ -f $ROLLBACK ]] || touch $ROLLBACK && chmod +x $ROLLBACK
+
 # if no library mentioned we install all, otherwise, we just install 
 # the library present in $1
 if [[ -z $1 ]]; then
   install_all
 else
   # does this library exist ?
-  [[ ! -f ./lib/$1 ]] && err "${0##*/}: this library doesn't exist"
+  [[ -f ./lib/$1 ]] || err "${0##*/}: this library doesn't exist"
   # install the unique library
-  . ./lib/$1
-  "${1#*_}"_lib
+  if [ $1 == "rollback" ]; then
+    ./lib/$1
+    rm ./lib/$1
+  else
+    . ./lib/$1
+    "${1#*_}"_lib
+  fi
 fi
