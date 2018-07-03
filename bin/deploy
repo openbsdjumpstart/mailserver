@@ -41,7 +41,7 @@ usage()
 # Backup configuration file to /etc/examples
 backup()
 {
-  local _filename="${1##*/}" _examples=/etc/examples
+  local _filename="${1##*/}" _examples=backup
   if [ -r "$1" ]; then
     if [ ! -r $_examples/"$_filename" ]; then
       docmd cp -p "$1" $_examples
