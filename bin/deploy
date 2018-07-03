@@ -21,7 +21,7 @@ docmd()
 # install all libraries (opensmtpd, dovecot ...)
 install_all()
 {
-  for i in ./lib/* ; do
+  for i in ./lib/??_* ; do
     . "$i"
     "${i#*_}"_lib
   done
