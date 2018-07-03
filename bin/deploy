@@ -6,6 +6,10 @@ set -e
 # set OpenBSD version supported without the dot
 readonly VER=63
 
+# create backup folder to store existing configuration files
+BACKUP=backup
+mkdir -p $BACKUP
+
 # handle errors
 err()
 {
@@ -41,12 +45,12 @@ usage()
 # Backup configuration file to /etc/examples
 backup()
 {
-  local _filename="${1##*/}" _examples=backup
+  local _filename="${1##*/}"
   if [ -r "$1" ]; then
-    if [ ! -r $_examples/"$_filename" ]; then
-      docmd cp -p "$1" $_examples
+    if [ ! -r $BACKUP/"$_filename" ]; then
+      docmd cp -p "$1" $BACKUP
     else
-      docmd cp -p "$1" $_examples/"$_filename"-"$(date \
+      docmd cp -p "$1" $BACKUP/"$_filename"-"$(date \
         "+%Y-%m-%d-%H-%M-%S")"
     fi
   fi
