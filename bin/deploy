@@ -6,9 +6,11 @@ set -e
 # set OpenBSD version supported without the dot
 readonly VER=63
 
-# create backup folder to store existing configuration files
-BACKUP=backup
-mkdir -p $BACKUP
+# create the rollback folder
+mkdir -p rollback
+
+# create the temporary folder
+mkdir ./tmp
 
 # handle errors
 err()
@@ -51,7 +53,7 @@ backup()
 {
   local _filename="${1##*/}"
   if [[ -f $1 ]]; then
-    [[ -f $BACKUP/$_filename ]] || docmd cp -p "$1" $BACKUP
+    [[ -f rollback/$_filename ]] || docmd cp -p "$1" rollback
   fi
 }
 
@@ -85,7 +87,7 @@ shift $((OPTIND - 1))
 (($# > 1)) && usage
 
 # create a rollback library
-ROLLBACK=./lib/rollback
+readonly ROLLBACK=./lib/rollback
 [[ -f $ROLLBACK ]] || touch $ROLLBACK && chmod +x $ROLLBACK
 
 # if no library mentioned we install all, otherwise, we just install 
