@@ -9,9 +9,6 @@ readonly VER=63
 # create the rollback folder
 mkdir -p rollback
 
-# create the temporary folder
-mkdir ./tmp
-
 # handle errors
 err()
 {
