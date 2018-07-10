@@ -57,6 +57,24 @@ backup()
   fi
 }
 
+check_system()
+{
+  local _rc=/etc/rc.conf.local
+
+  # exit this function if etc.policy is present
+  [[ -r rollback/etc.policy ]] && return
+
+  # backup /etc/rc.conf.local
+  [[ -r $_rc ]] && backup $_rc
+
+  # save running daemons
+  /usr/sbin/rcctl ls started > rollback/started
+
+  # create a specification file for /etc
+  /usr/sbin/mtree -c -k uid,gid,mode,sha256digest -p \
+    /etc > rollback/etc.policy
+}
+
 # are you using the good release ?
 (($(uname -r | tr -d .) != VER)) && \
   err "this release is not supported"
@@ -85,6 +103,9 @@ shift $((OPTIND - 1))
 
 # only one library allowed, or empty library
 (($# > 1)) && usage
+
+# check running system
+check_system
 
 # create a rollback library
 readonly ROLLBACK=./lib/rollback
