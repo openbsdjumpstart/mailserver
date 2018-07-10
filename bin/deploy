@@ -9,6 +9,9 @@ readonly VER=63
 # create the rollback folder
 mkdir -p rollback
 
+# remove the rollback folder on ctrl-c if no file etc.policy present
+trap '[[ -r rollback/etc.policy ]] || rm -rf ./rollback' INT
+
 # handle errors
 err()
 {
