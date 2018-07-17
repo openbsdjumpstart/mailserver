@@ -61,7 +61,7 @@ usage()
   echo 
   echo "  -n :\tNot executing commands just print out what will happen."
   echo "\tThis mode is also known as dry-run."
-  exit
+  exit 1
 }
 
 # Backup configuration file to /etc/examples
