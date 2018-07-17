@@ -89,6 +89,9 @@ check_system()
   # create a specification file for /etc
   /usr/sbin/mtree -c -k uid,gid,mode,sha256digest -p \
     /etc > rollback/etc.policy
+
+  # backup root crontab
+  backup /var/cron/tabs/root
 }
 
 # are you using the good release ?
