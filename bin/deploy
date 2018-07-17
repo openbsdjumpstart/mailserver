@@ -28,7 +28,7 @@ echored()
 # handle errors
 err()
 {
-  echo "${0##*/}: ${1}" >&2 && return "${2:-1}"
+  echored "${0##*/}: ${1}" >&2 && return "${2:-1}"
 }
 
 # wrapper for executing commands
@@ -52,13 +52,14 @@ install_all()
 
 usage()
 {
-  echo "Usage: ${0##*/} [-dn] [library]"
+  echored "Usage: ${0##*/} [-dn] [library]"
   echo
   echo "  -d :\tDebugmode. Print commands and parameter assignments"
   echo "\twhen they are executed."
   echo 
   echo "  -n :\tNot executing commands just print out what will happen."
-  err "\tThis mode is also known as dry-run."
+  echo "\tThis mode is also known as dry-run."
+  exit
 }
 
 # Backup configuration file to /etc/examples
@@ -106,7 +107,7 @@ done
   err "dry-run is not compatible with the rollback feature"
 
 # running in dry-run mode?
-[[ -n ${DRYRUN} ]] && echo "Doing a dry-run - Not executing commands" 
+[[ -n ${DRYRUN} ]] && echored "Doing a dry-run - Not executing commands" 
 
 # only root can run this scipt if we are not in dry-run mode
 (($(id -u) != 0)) && ((DRYRUN != 1)) && err "need root privileges" 
