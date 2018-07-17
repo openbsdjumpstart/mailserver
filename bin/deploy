@@ -73,7 +73,7 @@ backup()
   fi
 }
 
-check_system()
+backup_system()
 {
   local _rc=/etc/rc.conf.local
 
@@ -123,8 +123,8 @@ shift $((OPTIND - 1))
 # only one library allowed, or empty library
 (($# > 1)) && usage
 
-# check running system
-check_system
+# backup running system
+backup_system
 
 # create a rollback library
 readonly ROLLBACK=./lib/rollback
