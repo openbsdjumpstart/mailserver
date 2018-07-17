@@ -6,6 +6,10 @@ set -e
 # set OpenBSD version supported without the dot
 readonly VER=63
 
+# set hostname and domain name
+readonly CN=$(hostname)
+readonly FQDN=${CN#*.}
+
 # create the rollback folder
 mkdir -p rollback
 
