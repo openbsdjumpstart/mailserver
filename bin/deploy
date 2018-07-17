@@ -35,8 +35,10 @@ err()
 docmd()
 {
   if [[ -n ${DRYRUN} ]]; then
-    echo "$@"
+    # -s option for silent
+    [[ $1 == -s ]] || echo "$@"
   else
+    [[ $1 == -s ]] && shift
     "$@" >/dev/null 2>&1
   fi
 }
