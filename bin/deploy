@@ -64,7 +64,7 @@ usage()
   exit 1
 }
 
-# Backup configuration file to /etc/examples
+# Backup configuration file to rollback folder
 backup()
 {
   local _filename="${1##*/}"
