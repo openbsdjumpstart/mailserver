@@ -94,6 +94,13 @@ backup_system()
   backup /var/cron/tabs/root
 }
 
+link_library()
+{
+  for i in ./lib/??_* ; do
+    (cd lib && ln -sf "${i##*/}" "${i#*_}")
+  done
+}
+
 # are you using the good release ?
 (($(uname -r | tr -d .) != VER)) && \
   err "this release is not supported"
@@ -129,6 +136,9 @@ backup_system
 # create a rollback library
 readonly ROLLBACK=./lib/rollback
 [[ -f $ROLLBACK ]] || touch $ROLLBACK && chmod +x $ROLLBACK
+
+# create symbolic links for ./lib/??_* example 'deploy httpd'
+link_library
 
 # if no library mentioned we install all, otherwise, we just install 
 # the library present in $1
