@@ -30,9 +30,9 @@ consistently within a project.
 ### Project specific
 
 - **Errorhandling:** Use the `err()` function for displaying
-  errormessages. Example: `err "some error occured"`
+  errormessages. Example: `err "some error occurred"`
   This function returns 1 or an optional code: `err "some error
-  occured" 5`
+  occurred" 5`
 
 - **Execute Commands**: Use the `docmd()` function for executing
   external commands. This finction wraps the checks if the command
